@@ -1,11 +1,11 @@
 {
-	"name": "silverstripe-australia/silverstripe-news",
+	"name": "micahsheets/silverstripe-news",
 	"description": "News module for silverstripe",
 	"type": "silverstripe-module",
 	"keywords": ["silverstripe", "news"],
 	"authors": [
 		{
-			"name": "Marcus Nyeholt"			
+			"name": "Micah Sheets"			
 		}
 	],
 	"require": {
