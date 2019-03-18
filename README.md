@@ -1,18 +1,12 @@
 # News Module
 
-Note: News module for SilverStripe 2.4 is available on the ss24 branch!
-
-## Maintainer Contact
-
-Marcus Nyeholt
-
-<marcus (at) silverstripe (dot) com (dot) au>
-
 ## Requirements
 
-SilverStripe 3.0.x
+SilverStripe 4
 
 ## Overview
+
+Forked from Nyeholt news and upgraded for SS 4
 
 The News module provides a straightforward method for creating and publishing
 news articles on a website. In some respects it is similar to the Blog module,
