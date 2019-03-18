@@ -8,27 +8,21 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataObject;
 
-/**
- * A top level page that contains news articles
- *
- * @author Marcus Nyeholt <marcus@silverstripe.com.au>
- * @license BSD License http://silverstripe.org/bsd-license/
- */
 class NewsHolder extends Page {
 
 	private static $table_name = 'NewsHolder';
 
 	private static $db = array(
 		'AutoFiling'			=> 'Boolean',		// whether articles created in this holder
-													// automatically file into subfolders
+		// automatically file into subfolders
 		'FilingMode'			=> 'Varchar',		// Date, Month, Year
 		'FileBy'				=> "Varchar",
 
-        'OrderBy'				=> "Varchar",
-        'OrderDir'				=> "Varchar",
+		'OrderBy'				=> "Varchar",
+		'OrderDir'				=> "Varchar",
 
 		'PrimaryNewsSection'	=> 'Boolean',		// whether this holder should be regarded as a primary
-													// news section (some are secondary and merely categorisation tools)
+		// news section (some are secondary and merely categorisation tools)
 	);
 
 	private static $defaults = array(
@@ -36,7 +30,7 @@ class NewsHolder extends Page {
 		'PrimaryNewsSection'	=> true
 	);
 
-	private static $icon = '/public/resources/vendor/micahsheets/silverstripe-news/client/dist/images/newsholder-file.gif';
+	private static $icon = 'public/resources/vendor/micahsheets/silverstripe-news/client/dist/images/newsholder-file.gif';
 
 	private static $allowed_children = array(
 		NewsArticle::class,

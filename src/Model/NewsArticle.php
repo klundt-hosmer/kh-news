@@ -7,21 +7,16 @@ use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\UploadField;
-use SilverStripe\Forms\HTMLEditorField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use micahsheets\Model\NewsHolder;
 
-/**
- * A news article in the system
- *
- * @author Marcus Nyeholt <marcus@silverstripe.com.au>
- * @license BSD License http://silverstripe.org/bsd-license/
- */
 class NewsArticle extends Page {
 
 	private static $table_name = 'NewsArticle';
 
-	private static $icon = '/public/resources/vendor/micahsheets/silverstripe-news/client/dist/images/newspaper-file.gif';
+	private static $icon = 'public/resources/vendor/micahsheets/silverstripe-news/client/dist/images/newspaper-file.gif';
 
 	private static $db = array(
 		'Summary' => 'HTMLText',
@@ -48,13 +43,13 @@ class NewsArticle extends Page {
 		$fields->addFieldToTab('Root.Main', TextField::create('Author', _t('NewsArticle.AUTHOR', 'Author')), 'Content');
 		$fields->addFieldToTab('Root.Main', $dp = DateField::create('OriginalPublishedDate', _t('NewsArticle.PUBLISHED_DATE', 'When was this article first published?')), 'Content');
 
-		$dp->setConfig('showcalendar', true);
+		//$dp->setConfig('showcalendar', true);
 
 		$fields->addFieldToTab('Root.Main', TextField::create('ExternalURL', _t('NewsArticle.EXTERNAL_URL', 'External URL to article (will automatically redirect to this URL if no article content set)')), 'Content');
 		$fields->addFieldToTab('Root.Main', TextField::create('Source', _t('NewsArticle.SOURCE', 'News Source')), 'Content');
 
 		$fields->addFieldToTab('Root.Main', $if = UploadField::create('Thumbnail', _t('NewsArticle.THUMB', 'Thumbnail')), 'Content');
-		$if->setConfig('allowedMaxFileNumber', 1)->setFolderName('news-articles/thumbnails');
+		$if->setAllowedMaxFileNumber(1)->setFolderName('news-articles/thumbnails');
 		$if->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
 
 		if (!$this->OriginalPublishedDate) {
@@ -125,7 +120,7 @@ class NewsArticle extends Page {
 	 * writing the objects
 	 */
 	protected function publishSection() {
-		$parent = DataObject::get_by_id('NewsHolder', $this->ParentID);
+		$parent = NewsHolder::get()->byID($this->ParentID);
 		while ($parent && $parent instanceof NewsHolder) {
 			if (!$parent->isPublished()) {
 				$parent->doPublish();
@@ -202,18 +197,18 @@ class NewsArticle extends Page {
 	 * @return Array
 	 */
 	public function pagesAffectedByChanges() {
-    	$parent = $this->Parent();
-    	$urls 	= array($this->Link());
+		$parent = $this->Parent();
+		$urls 	= array($this->Link());
 
 		// add all parent (holders)
 		while($parent && $parent->ParentID > -1 && $parent instanceof NewsHolder) {
-    		$urls[] = $parent->Link();
-    		$parent = $parent->Parent();
-   		}
+			$urls[] = $parent->Link();
+			$parent = $parent->Parent();
+		}
 
-   		$this->extend('updatePagesAffectedByChanges', $urls);
+		$this->extend('updatePagesAffectedByChanges', $urls);
 
-    	return $urls;
-  	}
+		return $urls;
+	}
 
 }
