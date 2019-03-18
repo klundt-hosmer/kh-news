@@ -1,8 +1,8 @@
 <ul class="newsArticles">
-	<% if Articles %><% loop Articles %>
+	<% if $Articles %><% loop $Articles %>
 	<li>
 	<h3><a href="$Link">$Title</a></h3>
-	<% if Thumbnail %>
+	<% if $Thumbnail %>
 	<div class="newsThumbnail">
 	<a href="$Link">
 	$Thumbnail.SetRatioSize(50,50)

@@ -1,24 +1,24 @@
 {
 	"name": "micahsheets/silverstripe-news",
-	"description": "News module for silverstripe",
+	"description": "News module for SilverStripe 4",
 	"type": "silverstripe-vendormodule",
-	"keywords": ["silverstripe", "news"],
+	"keywords": ["klundthosmer", "news"],
 	"authors": [
-		{
-			"name": "Micah Sheets"			
-		}
+		{"name": "Micah Sheets"}
 	],
 	"require": {
-		"silverstripe/cms": "~4.0",
-		"silverstripe/framework": "~4.0"	
+		"silverstripe/cms": "^4",
+		"silverstripe/framework": "^4"
+	},
+	"autoload": {
+		"psr-4": {
+			"micahsheets\\silverstripe-news\\": "src/"
+		}
 	},
 	"extra": {
-		"branch-alias": {
-			"dev-master": "4.0.x-dev"
-		},
+		"installer-name": "news",
 		"expose": [
 			"client"
-		],
-		"installer-name": "news"
+		]
 	}
 }

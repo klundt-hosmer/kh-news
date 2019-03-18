@@ -1,5 +1,16 @@
 <?php
 
+namespace micahsheets\Model;
+
+use Page;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\UploadField;
+use SilverStripe\Forms\HTMLEditorField;
+use SilverStripe\ORM\DataObject;
+
 /**
  * A news article in the system
  *
@@ -8,7 +19,10 @@
  */
 class NewsArticle extends Page {
 
-	private static $icon = 'news/images/newspaper';
+	private static $table_name = 'NewsArticle';
+
+	private static $icon = 'client/images/newspaper-file.gif';
+
 	private static $db = array(
 		'Summary' => 'HTMLText',
 		'Author' => 'Varchar(128)',
@@ -18,28 +32,28 @@ class NewsArticle extends Page {
 	);
 	/**
 	 * The InternalFile is used when the news article is mostly contained in a file based item -
-	 * if this is set, then the URL to the item is returned in the call to "Link" for this asset. 
+	 * if this is set, then the URL to the item is returned in the call to "Link" for this asset.
 	 *
 	 * @var array
 	 */
 	private static $has_one = array(
-		'InternalFile' => 'File',
-		'NewsSection' => 'NewsHolder',
-		'Thumbnail' => 'Image',
+		'InternalFile' => File::class,
+		'NewsSection' => NewsHolder::class,
+		'Thumbnail' => Image::class,
 	);
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
-		$fields->addFieldToTab('Root.Main', new TextField('Author', _t('NewsArticle.AUTHOR', 'Author')), 'Content');
-		$fields->addFieldToTab('Root.Main', $dp = new DateField('OriginalPublishedDate', _t('NewsArticle.PUBLISHED_DATE', 'When was this article first published?')), 'Content');
+		$fields->addFieldToTab('Root.Main', TextField::create('Author', _t('NewsArticle.AUTHOR', 'Author')), 'Content');
+		$fields->addFieldToTab('Root.Main', $dp = DateField::create('OriginalPublishedDate', _t('NewsArticle.PUBLISHED_DATE', 'When was this article first published?')), 'Content');
 
 		$dp->setConfig('showcalendar', true);
 
-		$fields->addFieldToTab('Root.Main', new TextField('ExternalURL', _t('NewsArticle.EXTERNAL_URL', 'External URL to article (will automatically redirect to this URL if no article content set)')), 'Content');
-		$fields->addFieldToTab('Root.Main', new TextField('Source', _t('NewsArticle.SOURCE', 'News Source')), 'Content');
+		$fields->addFieldToTab('Root.Main', TextField::create('ExternalURL', _t('NewsArticle.EXTERNAL_URL', 'External URL to article (will automatically redirect to this URL if no article content set)')), 'Content');
+		$fields->addFieldToTab('Root.Main', TextField::create('Source', _t('NewsArticle.SOURCE', 'News Source')), 'Content');
 
-		$fields->addFieldToTab('Root.Main', $if = new UploadField('Thumbnail', _t('NewsArticle.THUMB', 'Thumbnail')), 'Content');
+		$fields->addFieldToTab('Root.Main', $if = UploadField::create('Thumbnail', _t('NewsArticle.THUMB', 'Thumbnail')), 'Content');
 		$if->setConfig('allowedMaxFileNumber', 1)->setFolderName('news-articles/thumbnails');
 		$if->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
 
@@ -49,11 +63,11 @@ class NewsArticle extends Page {
 		}
 
 		$fields->addFieldToTab('Root.Main', UploadField::create('InternalFile', _t('NewsArticle.INTERNAL_FILE', 'Select a file containing this news article, if any'))->setFolderName('news'), 'Content');
-		$fields->addFieldToTab('Root.Main', $summary = new HtmlEditorField('Summary', _t('NewsArticle.SUMMARY', 'Article Summary (displayed in listings)')), 'Content');
+		$fields->addFieldToTab('Root.Main', $summary = HTMLEditorField::create('Summary', _t('NewsArticle.SUMMARY', 'Article Summary (displayed in listings)')), 'Content');
 		$summary->addExtraClass('stacked');
 
 		$this->extend('updateArticleCMSFields', $fields);
-		
+
 		return $fields;
 	}
 
@@ -63,13 +77,13 @@ class NewsArticle extends Page {
 	 */
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
-		
+
 		// dummy initial date
 		if (!$this->OriginalPublishedDate) {
 			// @TODO Fix this to be correctly localized!!
 			$this->OriginalPublishedDate = date('Y-m-d 12:00:00');
 		}
-		
+
 		$parent = $this->Parent();
 
 		// just in case we've been moved, update our section
@@ -98,14 +112,14 @@ class NewsArticle extends Page {
 		// go through all parents that are news holders and publish them if they haven't been
 		$this->publishSection();
 	}
-	
+
 	public function onAfterPublish() {
 		// $this->publishSection();
 	}
 
 	/**
 	 * Ensure's the section is published.
-	 * 
+	 *
 	 * We need to do it both before and after publish because of some quirks with
 	 * folders not existing on one but existing on the other depending on the order of
 	 * writing the objects
@@ -164,7 +178,7 @@ class NewsArticle extends Page {
 	}
 
 	/**
-	 * Link to the news article. If it has an external URL set, or a file, link to that instead. 
+	 * Link to the news article. If it has an external URL set, or a file, link to that instead.
 	 *
 	 * @param String $action
 	 * @return String
@@ -180,8 +194,8 @@ class NewsArticle extends Page {
 		}
 		return parent::Link($action);
 	}
-	
-	 	
+
+
 	/**
 	 * Pages to update cache file for static publisher
 	 *
@@ -190,19 +204,16 @@ class NewsArticle extends Page {
 	public function pagesAffectedByChanges() {
     	$parent = $this->Parent();
     	$urls 	= array($this->Link());
-		
+
 		// add all parent (holders)
 		while($parent && $parent->ParentID > -1 && $parent instanceof NewsHolder) {
     		$urls[] = $parent->Link();
     		$parent = $parent->Parent();
    		}
-   		
+
    		$this->extend('updatePagesAffectedByChanges', $urls);
-    	
+
     	return $urls;
   	}
 
-}
-
-class NewsArticle_Controller extends Page_Controller {
 }

@@ -1,5 +1,13 @@
 <?php
 
+namespace micahsheets\Model;
+
+use Page;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\ORM\PaginatedList;
+use SilverStripe\ORM\DataObject;
+
 /**
  * A top level page that contains news articles
  *
@@ -8,25 +16,27 @@
  */
 class NewsHolder extends Page {
 
+	private static $table_name = 'NewsHolder';
+
 	private static $db = array(
 		'AutoFiling'			=> 'Boolean',		// whether articles created in this holder
 													// automatically file into subfolders
 		'FilingMode'			=> 'Varchar',		// Date, Month, Year
 		'FileBy'				=> "Varchar",
-        
+
         'OrderBy'				=> "Varchar",
         'OrderDir'				=> "Varchar",
-        
+
 		'PrimaryNewsSection'	=> 'Boolean',		// whether this holder should be regarded as a primary
 													// news section (some are secondary and merely categorisation tools)
 	);
-	
+
 	private static $defaults = array(
-		'AutoFiling'			=> false, 
+		'AutoFiling'			=> false,
 		'PrimaryNewsSection'	=> true
 	);
-	
-	private static $icon = 'news/images/newsholder';
+
+	private static $icon = 'client/images/newsholder-file.gif';
 
 	private static $allowed_children = array(
 		'NewsArticle',
@@ -44,7 +54,7 @@ class NewsHolder extends Page {
 	 *
 	 * We need to do this because using something like <% if Articles(2).HasMore %> doesn't work, as
 	 * the .HasMore isn't parsed correctly...
-	 * 
+	 *
 	 * @var int
 	 */
 	protected $numberToDisplay = 10;
@@ -69,22 +79,22 @@ class NewsHolder extends Page {
 
 		$fields->addFieldToTab('Root.Main', new DropdownField('OrderBy', _t('NewsHolder.ORDER_BY', 'Order by'), array('OriginalPublishedDate' => 'Published', 'Created' => 'Created')), 'Content');
 		$fields->addFieldToTab('Root.Main', new DropdownField('OrderDir', _t('NewsHolder.ORDER_DIR', 'Order direction'), array('DESC' => 'Descending date', 'ASC' => 'Ascending date')), 'Content');
-		
+
 		$this->extend('updateNewsHolderCMSFields', $fields);
 
 		return $fields;
 	}
-	
+
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
-		
+
 		// set the filing mode, now that it's being obsolete
 		if ($this->AutoFiling && !$this->FilingMode) {
 			$this->FilingMode = 'day';
 			$this->AutoFiling = false;
 		}
 	}
-	
+
 	/**
 	 * Returns a list of articles within this news holder.
 	 *
@@ -161,16 +171,16 @@ class NewsHolder extends Page {
 
 		return $subs;
 	}
-	
+
 	/**
 	 * Maintain API compatibility with NewsArticle
-	 * 
+	 *
 	 * @return NewsHolder
 	 */
 	public function Section() {
 		return $this->findSection();
 	}
-	
+
 	/**
 	 * Find the section this news article is currently in, based on ancestor pages
 	 */
@@ -216,7 +226,7 @@ class NewsHolder extends Page {
 		if (!$monthFolder) {
 			throw new Exception("Failed retrieving folder");
 		}
-		
+
 		if ($this->FilingMode == 'month') {
 			return $monthFolder;
 		}
@@ -254,7 +264,7 @@ class NewsHolder extends Page {
 		}
 		return $child;
 	}
-	
+
 	/**
 	 * Pages to update cache file for static publisher
 	 *
@@ -288,21 +298,4 @@ class NewsHolder extends Page {
 		$entries->setPaginationFromQuery($articles->dataQuery()->query());
 		return $entries;
 	}
-}
-
-class NewsHolder_Controller extends Page_Controller {
-	public static $allowed_actions = array('Rss');
-
-    public function init() {
-        RSSFeed::linkToFeed($this->owner->Link() . "rss", _t('News.RSSLINK',"RSS feed for the News"));
-        parent::init();
-    }
-
-    function Rss() {
-        $parent = $this->data()->ID;
-        $objects = NewsArticle::get()->filter('ParentID', $parent)->sort('LastEdited DESC')->limit(10);
-        $rss = new RSSFeed($objects, $this->data()->Link(), _t('News.RSSTITLE',"10 most recent news"), "", "Title", "Content");
-        $this->response->addHeader('Content-Type', 'application/rss+xml');
-        return $rss->outputToBrowser();
-    }
 }
