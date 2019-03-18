@@ -36,11 +36,11 @@ class NewsHolder extends Page {
 		'PrimaryNewsSection'	=> true
 	);
 
-	private static $icon = 'client/images/newsholder-file.gif';
+	private static $icon = '/public/resources/vendor/micahsheets/silverstripe-news/client/dist/images/newsholder-file.gif';
 
 	private static $allowed_children = array(
-		'NewsArticle',
-		'NewsHolder'
+		NewsArticle::class,
+		NewsHolder::class
 	);
 	/**
 	 * Should this news article be automatically filed into a year/month/date

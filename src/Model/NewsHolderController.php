@@ -7,7 +7,7 @@ use SilverStripe\Control\RSS\RSSFeed;
 
 class NewsHolderController extends PageController {
 
-	public static $allowed_actions = array('Rss');
+	private static $allowed_actions = array('Rss');
 
 	public function init() {
 		RSSFeed::linkToFeed($this->owner->Link() . "rss", _t('News.RSSLINK',"RSS feed for the News"));

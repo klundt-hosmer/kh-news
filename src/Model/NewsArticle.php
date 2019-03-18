@@ -21,7 +21,7 @@ class NewsArticle extends Page {
 
 	private static $table_name = 'NewsArticle';
 
-	private static $icon = 'client/images/newspaper-file.gif';
+	private static $icon = '/public/resources/vendor/micahsheets/silverstripe-news/client/dist/images/newspaper-file.gif';
 
 	private static $db = array(
 		'Summary' => 'HTMLText',
