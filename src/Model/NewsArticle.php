@@ -36,6 +36,11 @@ class NewsArticle extends Page {
 		'Thumbnail' => Image::class,
 	];
 
+	private static $owns = [
+		'InternalFile',
+		'Thumbnail'
+	];
+
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
