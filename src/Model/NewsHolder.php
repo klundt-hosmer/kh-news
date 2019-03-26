@@ -13,158 +13,158 @@ class NewsHolder extends Page {
 
 	private static $table_name = 'NewsHolder';
 
-	private static $db = [
-		'AutoFiling'			=> 'Boolean',		// whether articles created in this holder
-		// automatically file into subfolders
-		'FilingMode'			=> 'Varchar',		// Date, Month, Year
-		'FileBy'				=> "Varchar",
-
-		'OrderBy'				=> "Varchar",
-		'OrderDir'				=> "Varchar",
-
-		'PrimaryNewsSection'	=> 'Boolean',		// whether this holder should be regarded as a primary
-		// news section (some are secondary and merely categorisation tools)
-	];
-
-	private static $defaults = [
-		'AutoFiling'			=> false,
-		'PrimaryNewsSection'	=> true
-	];
-
-	private static $icon = 'micahsheets/silverstripe-news:client/images/newsholder-file.gif';
-
-	private static $allowed_children = [
-		NewsArticle::class,
-		NewsHolder::class
-	];
-	/**
-	 * Should this news article be automatically filed into a year/month/date
-	 * folder on creation.
-	 *
-	 * @var boolean
-	 */
-	private static $automatic_filing = true;
-	/**
-	 * A bit of a cheat way of letting the template determine how many articles to display.
-	 *
-	 * We need to do this because using something like <% if Articles(2).HasMore %> doesn't work, as
-	 * the .HasMore isn't parsed correctly...
-	 *
-	 * @var int
-	 */
-	protected $numberToDisplay = 10;
-
-	/**
-	 * Gets the fields to display for this news holder in the CMS
-	 *
-	 * @return FieldSet
-	 */
-//	public function getCMSFields() {
-//		$fields = parent::getCMSFields();
+//	private static $db = [
+//		'AutoFiling'			=> 'Boolean',		// whether articles created in this holder
+//		// automatically file into subfolders
+//		'FilingMode'			=> 'Varchar',		// Date, Month, Year
+//		'FileBy'				=> "Varchar",
 //
-//		$modes = [
-//			''		=> 'No filing',
-//			'day'	=> '/Year/Month/Day',
-//			'month'	=> '/Year/Month',
-//			'year'	=> '/Year'
-//		];
-//		$fields->addFieldToTab('Root.Main', DropdownField::create('FilingMode', _t('NewsHolder.FILING_MODE', 'File into'), $modes), 'Content');
-//		$fields->addFieldToTab('Root.Main', DropdownField::create('FileBy', _t('NewsHolder.FILE_BY', 'File by'), array('Published' => 'Published', 'Created' => 'Created')), 'Content');
-//		$fields->addFieldToTab('Root.Main', CheckboxField::create('PrimaryNewsSection', _t('NewsHolder.PRIMARY_SECTION', 'Is this a primary news section?'), true), 'Content');
+//		'OrderBy'				=> "Varchar",
+//		'OrderDir'				=> "Varchar",
 //
-//		$fields->addFieldToTab('Root.Main', DropdownField::create('OrderBy', _t('NewsHolder.ORDER_BY', 'Order by'), array('OriginalPublishedDate' => 'Published', 'Created' => 'Created')), 'Content');
-//		$fields->addFieldToTab('Root.Main', DropdownField::create('OrderDir', _t('NewsHolder.ORDER_DIR', 'Order direction'), array('DESC' => 'Descending date', 'ASC' => 'Ascending date')), 'Content');
+//		'PrimaryNewsSection'	=> 'Boolean',		// whether this holder should be regarded as a primary
+//		// news section (some are secondary and merely categorisation tools)
+//	];
 //
-//		$this->extend('updateNewsHolderCMSFields', $fields);
+//	private static $defaults = [
+//		'AutoFiling'			=> false,
+//		'PrimaryNewsSection'	=> true
+//	];
 //
-//		return $fields;
+//	private static $icon = 'micahsheets/kh-news:client/images/newsholder-file.gif';
+//
+//	private static $allowed_children = [
+//		NewsArticle::class,
+//		NewsHolder::class
+//	];
+//	/**
+//	 * Should this news article be automatically filed into a year/month/date
+//	 * folder on creation.
+//	 *
+//	 * @var boolean
+//	 */
+//	private static $automatic_filing = true;
+//	/**
+//	 * A bit of a cheat way of letting the template determine how many articles to display.
+//	 *
+//	 * We need to do this because using something like <% if Articles(2).HasMore %> doesn't work, as
+//	 * the .HasMore isn't parsed correctly...
+//	 *
+//	 * @var int
+//	 */
+//	protected $numberToDisplay = 10;
+//
+//	/**
+//	 * Gets the fields to display for this news holder in the CMS
+//	 *
+//	 * @return FieldSet
+//	 */
+////	public function getCMSFields() {
+////		$fields = parent::getCMSFields();
+////
+////		$modes = [
+////			''		=> 'No filing',
+////			'day'	=> '/Year/Month/Day',
+////			'month'	=> '/Year/Month',
+////			'year'	=> '/Year'
+////		];
+////		$fields->addFieldToTab('Root.Main', DropdownField::create('FilingMode', _t('NewsHolder.FILING_MODE', 'File into'), $modes), 'Content');
+////		$fields->addFieldToTab('Root.Main', DropdownField::create('FileBy', _t('NewsHolder.FILE_BY', 'File by'), array('Published' => 'Published', 'Created' => 'Created')), 'Content');
+////		$fields->addFieldToTab('Root.Main', CheckboxField::create('PrimaryNewsSection', _t('NewsHolder.PRIMARY_SECTION', 'Is this a primary news section?'), true), 'Content');
+////
+////		$fields->addFieldToTab('Root.Main', DropdownField::create('OrderBy', _t('NewsHolder.ORDER_BY', 'Order by'), array('OriginalPublishedDate' => 'Published', 'Created' => 'Created')), 'Content');
+////		$fields->addFieldToTab('Root.Main', DropdownField::create('OrderDir', _t('NewsHolder.ORDER_DIR', 'Order direction'), array('DESC' => 'Descending date', 'ASC' => 'Ascending date')), 'Content');
+////
+////		$this->extend('updateNewsHolderCMSFields', $fields);
+////
+////		return $fields;
+////	}
+//
+//	public function onBeforeWrite() {
+//		parent::onBeforeWrite();
+//
+//		// set the filing mode, now that it's being obsolete
+//		if ($this->AutoFiling && !$this->FilingMode) {
+//			$this->FilingMode = 'day';
+//			$this->AutoFiling = false;
+//		}
 //	}
-
-	public function onBeforeWrite() {
-		parent::onBeforeWrite();
-
-		// set the filing mode, now that it's being obsolete
-		if ($this->AutoFiling && !$this->FilingMode) {
-			$this->FilingMode = 'day';
-			$this->AutoFiling = false;
-		}
-	}
-
-	/**
-	 * Returns a list of articles within this news holder.
-	 *
-	 * If there are sub-newsholders, it will return all the articles from there also
-	 *
-	 * @return DataObjectSet
-	 */
-	public function Articles($number=null) {
-		if (!$number) {
-			$number = $this->numberToDisplay;
-		}
-
-		$start = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
-		if ($start < 0) {
-			$start = 0;
-		}
-
-		$articles = null;
-		$filter = null;
-		if ($this->PrimaryNewsSection) {
-			// get all where the holder = me
-			$filter = array('NewsSectionID' => $this->ID);
-		} else {
-			$subholders = $this->SubSections();
-			if ($subholders) {
-				$subholders->push($this);
-			} else {
-				$subholders = null;
-			}
-
-			if ($subholders && $subholders->Count()) {
-				$ids = $subholders->column('ID');
-				$filter = array('ParentID' => $ids);
-			} else {
-				$filter = array('ParentID' => (int) $this->ID);
-			}
-		}
-
-		$orderBy = strlen($this->OrderBy) ? $this->OrderBy : 'OriginalPublishedDate';
-		$dir = strlen($this->OrderDir) ? $this->OrderDir : 'DESC';
-		if (!in_array($dir, array('ASC', 'DESC'))) {
-			$dir = 'DESC';
-		}
-
-		$articles = NewsArticle::get()->filter($filter)->sort(array($orderBy => $dir))->limit($number, $start);
-		$entries = PaginatedList::create($articles);
-		$entries->setPaginationFromQuery($articles->dataQuery()->query());
-
-		return $entries;
-	}
-
-	/**
-	 * Returns a list of sub news sections, if available
-	 *
-	 */
-	public function SubSections($allChildren=true) {
-		$subs = null;
-
-		$childHolders = NewsHolder::get()->filter('ParentID', $this->ID);
-		if ($childHolders && $childHolders->count()) {
-			$subs = new ArrayList();
-			foreach ($childHolders as $holder) {
-				$subs->push($holder);
-				if ($allChildren === true) {
-					// see if there's any children to include
-					$subSub = $holder->SubSections();
-					if ($subSub) {
-						$subs->merge($subSub);
-					}
-				}
-			}
-		}
-
-		return $subs;
-	}
+//
+//	/**
+//	 * Returns a list of articles within this news holder.
+//	 *
+//	 * If there are sub-newsholders, it will return all the articles from there also
+//	 *
+//	 * @return DataObjectSet
+//	 */
+//	public function Articles($number=null) {
+//		if (!$number) {
+//			$number = $this->numberToDisplay;
+//		}
+//
+//		$start = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
+//		if ($start < 0) {
+//			$start = 0;
+//		}
+//
+//		$articles = null;
+//		$filter = null;
+//		if ($this->PrimaryNewsSection) {
+//			// get all where the holder = me
+//			$filter = array('NewsSectionID' => $this->ID);
+//		} else {
+//			$subholders = $this->SubSections();
+//			if ($subholders) {
+//				$subholders->push($this);
+//			} else {
+//				$subholders = null;
+//			}
+//
+//			if ($subholders && $subholders->Count()) {
+//				$ids = $subholders->column('ID');
+//				$filter = array('ParentID' => $ids);
+//			} else {
+//				$filter = array('ParentID' => (int) $this->ID);
+//			}
+//		}
+//
+//		$orderBy = strlen($this->OrderBy) ? $this->OrderBy : 'OriginalPublishedDate';
+//		$dir = strlen($this->OrderDir) ? $this->OrderDir : 'DESC';
+//		if (!in_array($dir, array('ASC', 'DESC'))) {
+//			$dir = 'DESC';
+//		}
+//
+//		$articles = NewsArticle::get()->filter($filter)->sort(array($orderBy => $dir))->limit($number, $start);
+//		$entries = PaginatedList::create($articles);
+//		$entries->setPaginationFromQuery($articles->dataQuery()->query());
+//
+//		return $entries;
+//	}
+//
+//	/**
+//	 * Returns a list of sub news sections, if available
+//	 *
+//	 */
+//	public function SubSections($allChildren=true) {
+//		$subs = null;
+//
+//		$childHolders = NewsHolder::get()->filter('ParentID', $this->ID);
+//		if ($childHolders && $childHolders->count()) {
+//			$subs = new ArrayList();
+//			foreach ($childHolders as $holder) {
+//				$subs->push($holder);
+//				if ($allChildren === true) {
+//					// see if there's any children to include
+//					$subSub = $holder->SubSections();
+//					if ($subSub) {
+//						$subs->merge($subSub);
+//					}
+//				}
+//			}
+//		}
+//
+//		return $subs;
+//	}
 
 //	/**
 //	 * Maintain API compatibility with NewsArticle

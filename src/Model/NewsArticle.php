@@ -10,32 +10,31 @@ use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use micahsheets\Model\NewsHolder;
 
 class NewsArticle extends Page {
 
 	private static $table_name = 'NewsArticle';
 
-	private static $icon = 'micahsheets/silverstripe-news:client/images/newspaper-file.gif';
-
-	private static $db = [
-		'Summary' => 'HTMLText',
-		'Author' => 'Varchar(128)',
-		'OriginalPublishedDate' => 'Date',
-		'ExternalURL' => 'Varchar(255)',
-		'Source' => 'Varchar(128)',
-	];
-	/**
-	 * The InternalFile is used when the news article is mostly contained in a file based item -
-	 * if this is set, then the URL to the item is returned in the call to "Link" for this asset.
-	 *
-	 * @var array
-	 */
-	private static $has_one = [
-		'InternalFile' => File::class,
-		'NewsSection' => NewsHolder::class,
-		'Thumbnail' => Image::class,
-	];
+//	private static $icon = 'micahsheets/kh-news:client/images/newspaper-file.gif';
+//
+//	private static $db = [
+//		'Summary' => 'HTMLText',
+//		'Author' => 'Varchar(128)',
+//		'OriginalPublishedDate' => 'Date',
+//		'ExternalURL' => 'Varchar(255)',
+//		'Source' => 'Varchar(128)',
+//	];
+//	/**
+//	 * The InternalFile is used when the news article is mostly contained in a file based item -
+//	 * if this is set, then the URL to the item is returned in the call to "Link" for this asset.
+//	 *
+//	 * @var array
+//	 */
+//	private static $has_one = [
+//		'InternalFile' => File::class,
+//		'NewsSection' => NewsHolder::class,
+//		'Thumbnail' => Image::class,
+//	];
 
 //	public function getCMSFields() {
 //		$fields = parent::getCMSFields();
@@ -70,35 +69,35 @@ class NewsArticle extends Page {
 	 * When the article is saved, and this article's section dictates that it
 	 * needs to be filed, then do so
 	 */
-	public function onBeforeWrite() {
-		parent::onBeforeWrite();
-
-		// dummy initial date
-		if (!$this->OriginalPublishedDate) {
-			// @TODO Fix this to be correctly localized!!
-			$this->OriginalPublishedDate = date('Y-m-d 12:00:00');
-		}
-
-		$parent = $this->Parent();
-
-		// just in case we've been moved, update our section
-		$section = $this->findSection();
-		$this->NewsSectionID = $section->ID;
-
-		$newlyCreated = $section->ID == $parent->ID;
-		$changedPublishDate = $this->isChanged('OriginalPublishedDate', 2);
-
-		if (($changedPublishDate || $newlyCreated) && ($section->AutoFiling || $section->FilingMode)) {
-			if (!$this->Created) {
-				$this->Created = date('Y-m-d H:i:s');
-			}
-			$pp = $this->PartitionParent();
-			if ($pp->ID != $this->ParentID) {
-				$this->ParentID = $pp->ID;
-			}
-		}
-
-	}
+//	public function onBeforeWrite() {
+//		parent::onBeforeWrite();
+//
+//		// dummy initial date
+//		if (!$this->OriginalPublishedDate) {
+//			// @TODO Fix this to be correctly localized!!
+//			$this->OriginalPublishedDate = date('Y-m-d 12:00:00');
+//		}
+//
+//		$parent = $this->Parent();
+//
+//		// just in case we've been moved, update our section
+//		$section = $this->findSection();
+//		$this->NewsSectionID = $section->ID;
+//
+//		$newlyCreated = $section->ID == $parent->ID;
+//		$changedPublishDate = $this->isChanged('OriginalPublishedDate', 2);
+//
+//		if (($changedPublishDate || $newlyCreated) && ($section->AutoFiling || $section->FilingMode)) {
+//			if (!$this->Created) {
+//				$this->Created = date('Y-m-d H:i:s');
+//			}
+//			$pp = $this->PartitionParent();
+//			if ($pp->ID != $this->ParentID) {
+//				$this->ParentID = $pp->ID;
+//			}
+//		}
+//
+//	}
 
 //	/**
 //	 * Make sure all parents are published when publishing a news article

@@ -1,5 +1,5 @@
 {
-	"name": "micahsheets/silverstripe-news",
+	"name": "micahsheets/kh-news",
 	"description": "News module for SilverStripe 4",
 	"type": "silverstripe-vendormodule",
 	"keywords": ["klundthosmer", "news"],
@@ -12,10 +12,11 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"micahsheets\\silverstripe-news\\": "src/"
+			"micahsheets\\kh-news\\": "src/"
 		}
 	},
 	"extra": {
+		"installer-name": "kh-news",
 		"expose": [
 			"client/images"
 		]
