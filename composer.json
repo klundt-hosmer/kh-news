@@ -16,9 +16,8 @@
 		}
 	},
 	"extra": {
-		"installer-name": "news",
 		"expose": [
-			"client"
+			"client/images"
 		]
 	}
 }
