@@ -7,7 +7,7 @@ use SilverStripe\Control\RSS\RSSFeed;
 
 class NewsHolderController extends PageController {
 
-	private static $allowed_actions = array('Rss');
+	/*private static $allowed_actions = array('Rss');
 
 	public function init() {
 		RSSFeed::linkToFeed($this->owner->Link() . "rss", _t('News.RSSLINK',"RSS feed for the News"));
@@ -20,6 +20,6 @@ class NewsHolderController extends PageController {
 		$rss = new RSSFeed($objects, $this->data()->Link(), _t('News.RSSTITLE',"10 most recent news"), "", "Title", "Content");
 		$this->response->addHeader('Content-Type', 'application/rss+xml');
 		return $rss->outputToBrowser();
-	}
+	}*/
 
 }

@@ -7,12 +7,13 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ArrayList;
 
 class NewsHolder extends Page {
 
 	private static $table_name = 'NewsHolder';
 
-	private static $db = array(
+	private static $db = [
 		'AutoFiling'			=> 'Boolean',		// whether articles created in this holder
 		// automatically file into subfolders
 		'FilingMode'			=> 'Varchar',		// Date, Month, Year
@@ -23,19 +24,19 @@ class NewsHolder extends Page {
 
 		'PrimaryNewsSection'	=> 'Boolean',		// whether this holder should be regarded as a primary
 		// news section (some are secondary and merely categorisation tools)
-	);
+	];
 
-	private static $defaults = array(
+	private static $defaults = [
 		'AutoFiling'			=> false,
 		'PrimaryNewsSection'	=> true
-	);
+	];
 
-	private static $icon = 'public/resources/vendor/micahsheets/silverstripe-news/client/dist/images/newsholder-file.gif';
+	private static $icon = 'micahsheets/silverstripe-news:client/images/newsholder-file.gif';
 
-	private static $allowed_children = array(
+	private static $allowed_children = [
 		NewsArticle::class,
 		NewsHolder::class
-	);
+	];
 	/**
 	 * Should this news article be automatically filed into a year/month/date
 	 * folder on creation.
@@ -58,26 +59,26 @@ class NewsHolder extends Page {
 	 *
 	 * @return FieldSet
 	 */
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-
-		$modes = array(
-			''		=> 'No filing',
-			'day'	=> '/Year/Month/Day',
-			'month'	=> '/Year/Month',
-			'year'	=> '/Year'
-		);
-		$fields->addFieldToTab('Root.Main', new DropdownField('FilingMode', _t('NewsHolder.FILING_MODE', 'File into'), $modes), 'Content');
-		$fields->addFieldToTab('Root.Main', new DropdownField('FileBy', _t('NewsHolder.FILE_BY', 'File by'), array('Published' => 'Published', 'Created' => 'Created')), 'Content');
-		$fields->addFieldToTab('Root.Main', new CheckboxField('PrimaryNewsSection', _t('NewsHolder.PRIMARY_SECTION', 'Is this a primary news section?'), true), 'Content');
-
-		$fields->addFieldToTab('Root.Main', new DropdownField('OrderBy', _t('NewsHolder.ORDER_BY', 'Order by'), array('OriginalPublishedDate' => 'Published', 'Created' => 'Created')), 'Content');
-		$fields->addFieldToTab('Root.Main', new DropdownField('OrderDir', _t('NewsHolder.ORDER_DIR', 'Order direction'), array('DESC' => 'Descending date', 'ASC' => 'Ascending date')), 'Content');
-
-		$this->extend('updateNewsHolderCMSFields', $fields);
-
-		return $fields;
-	}
+//	public function getCMSFields() {
+//		$fields = parent::getCMSFields();
+//
+//		$modes = [
+//			''		=> 'No filing',
+//			'day'	=> '/Year/Month/Day',
+//			'month'	=> '/Year/Month',
+//			'year'	=> '/Year'
+//		];
+//		$fields->addFieldToTab('Root.Main', DropdownField::create('FilingMode', _t('NewsHolder.FILING_MODE', 'File into'), $modes), 'Content');
+//		$fields->addFieldToTab('Root.Main', DropdownField::create('FileBy', _t('NewsHolder.FILE_BY', 'File by'), array('Published' => 'Published', 'Created' => 'Created')), 'Content');
+//		$fields->addFieldToTab('Root.Main', CheckboxField::create('PrimaryNewsSection', _t('NewsHolder.PRIMARY_SECTION', 'Is this a primary news section?'), true), 'Content');
+//
+//		$fields->addFieldToTab('Root.Main', DropdownField::create('OrderBy', _t('NewsHolder.ORDER_BY', 'Order by'), array('OriginalPublishedDate' => 'Published', 'Created' => 'Created')), 'Content');
+//		$fields->addFieldToTab('Root.Main', DropdownField::create('OrderDir', _t('NewsHolder.ORDER_DIR', 'Order direction'), array('DESC' => 'Descending date', 'ASC' => 'Ascending date')), 'Content');
+//
+//		$this->extend('updateNewsHolderCMSFields', $fields);
+//
+//		return $fields;
+//	}
 
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
@@ -143,7 +144,6 @@ class NewsHolder extends Page {
 	/**
 	 * Returns a list of sub news sections, if available
 	 *
-	 * @return DataObjectSet
 	 */
 	public function SubSections($allChildren=true) {
 		$subs = null;
@@ -166,34 +166,34 @@ class NewsHolder extends Page {
 		return $subs;
 	}
 
-	/**
-	 * Maintain API compatibility with NewsArticle
-	 *
-	 * @return NewsHolder
-	 */
-	public function Section() {
-		return $this->findSection();
-	}
-
-	/**
-	 * Find the section this news article is currently in, based on ancestor pages
-	 */
-	public function findSection() {
-		$page = $this;
-		while ($page && $page->ID) {
-			if ($page->ParentID == 0 || $page->PrimaryNewsSection) {
-				return $page;
-			}
-			$page = $page->Parent();
-		}
-	}
+//	/**
+//	 * Maintain API compatibility with NewsArticle
+//	 *
+//	 * @return NewsHolder
+//	 */
+//	public function Section() {
+//		return $this->findSection();
+//	}
+//
+//	/**
+//	 * Find the section this news article is currently in, based on ancestor pages
+//	 */
+//	public function findSection() {
+//		$page = $this;
+//		while ($page && $page->ID) {
+//			if ($page->ParentID == 0 || $page->PrimaryNewsSection) {
+//				return $page;
+//			}
+//			$page = $page->Parent();
+//		}
+//	}
 
 	/**
 	 * Gets an appropriate sub article holder for the given article page
 	 *
 	 * @param Page $article
 	 */
-	public function getPartitionedHolderForArticle($article) {
+	/*public function getPartitionedHolderForArticle($article) {
 		if ($this->FileBy == 'Published' && $article->OriginalPublishedDate) {
 			$date = $article->OriginalPublishedDate;
 		} else if ($this->hasField($this->FileBy)) {
@@ -231,7 +231,7 @@ class NewsHolder extends Page {
 		}
 
 		return $dayFolder;
-	}
+	}*/
 
 	/**
 	 *
@@ -240,9 +240,9 @@ class NewsHolder extends Page {
 	 * @param String $name
 	 * @param String $type
 	 */
-	public function dateFolder($name, $publish=false) {
+	/*public function dateFolder($name, $publish=false) {
 		// see if we have a named child, otherwise create one
-		$child = DataObject::get_one('NewsHolder', 'ParentID = ' . $this->ID . ' AND Title = \'' . Convert::raw2sql($name) . '\'');
+		$child = NewsHolder::get()->filter(['ParentID' => $this->ID, 'Title' => Convert::raw2sql($name)]);
 
 		if (!$child || !$child->ID) {
 			$class = get_class($this);
@@ -257,39 +257,37 @@ class NewsHolder extends Page {
 			}
 		}
 		return $child;
-	}
+	}*/
 
-	/**
-	 * Pages to update cache file for static publisher
-	 *
-	 * @return Array
-	 */
-	public function pagesAffectedByChanges() {
-		$urls = array($this->Link());
-		return $urls;
-	}
-
-	/**
-	 * We do not want to use NewsHolder->SubSections because this splits the paginations into
-	 * the categories the articles are in which means the pagination will not work or will display
-	 * multiple times
-	 *
-	 * @return Array
-	 */
-	public function TotalChildArticles($number = null) {
-		if (!$number) {
-			$number = $this->numberToDisplay;
-		}
-
-		$start = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
-		if ($start < 0) {
-			$start = 0;
-		}
-
-		$articles = NewsArticle::get('NewsArticle', '', '"OriginalPublishedDate" DESC, "ID" DESC', '', $start . ',' . $number)
-			->filter(array('ID' => $this->getDescendantIDList()));
-		$entries = PaginatedList::create($articles);
-		$entries->setPaginationFromQuery($articles->dataQuery()->query());
-		return $entries;
-	}
+//	/**
+//	 * Pages to update cache file for static publisher
+//	 *
+//	 */
+//	public function pagesAffectedByChanges() {
+//		$urls = array($this->Link());
+//		return $urls;
+//	}
+//
+//	/**
+//	 * We do not want to use NewsHolder->SubSections because this splits the paginations into
+//	 * the categories the articles are in which means the pagination will not work or will display
+//	 * multiple times
+//	 *
+//	 * @return Array
+//	 */
+//	public function TotalChildArticles($number = null) {
+//		if (!$number) {
+//			$number = $this->numberToDisplay;
+//		}
+//
+//		$start = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
+//		if ($start < 0) {
+//			$start = 0;
+//		}
+//
+//		$articles = NewsArticle::get()->filter(['ID' => $this->getDescendantIDList(), "OriginalPublishedDate:GreaterThan" => $start])->Limit($number);
+//		$entries = PaginatedList::create($articles);
+//		$entries->setPaginationFromQuery($articles->dataQuery()->query());
+//		return $entries;
+//	}
 }
