@@ -1,6 +1,6 @@
 <?php
 
-namespace micahsheets\Model;
+namespace micahsheets\khnews\Model;
 
 use PageController;
 

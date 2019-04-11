@@ -1,6 +1,6 @@
 <?php
 
-namespace micahsheets\Model;
+namespace micahsheets\khnews\Model;
 
 use Page;
 use SilverStripe\Assets\File;
@@ -30,11 +30,15 @@ class NewsArticle extends Page {
 	 *
 	 * @var array
 	 */
-	private static $has_one = [
-		'InternalFile' => File::class,
-		'NewsSection' => NewsHolder::class,
-		'Thumbnail' => Image::class,
-	];
+    private static $has_one = [
+        'InternalFile' => File::class,
+        'NewsSection' => NewsHolder::class,
+        'Thumbnail' => Image::class,
+    ];
+    private static $owns = [
+        'InternalFile',
+        'Thumbnail'
+    ];
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();

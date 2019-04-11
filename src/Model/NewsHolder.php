@@ -1,6 +1,6 @@
 <?php
 
-namespace micahsheets\Model;
+namespace micahsheets\khnews\Model;
 
 use Page;
 use SilverStripe\Forms\DropdownField;
@@ -8,6 +8,8 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\Dev\Debug;
+
 
 class NewsHolder extends Page {
 
@@ -135,6 +137,7 @@ class NewsHolder extends Page {
 		}
 
 		$articles = NewsArticle::get()->filter($filter)->sort(array($orderBy => $dir))->limit($number, $start);
+//		Debug::show($articles); die;
 		$entries = PaginatedList::create($articles);
 		$entries->setPaginationFromQuery($articles->dataQuery()->query());
 
@@ -146,10 +149,10 @@ class NewsHolder extends Page {
 	 *
 	 */
 	public function SubSections($allChildren=true) {
-		$subs = null;
 
 		$childHolders = NewsHolder::get()->filter('ParentID', $this->ID);
-		if ($childHolders && $childHolders->count()) {
+
+		if ($childHolders->count() > 0) {
 			$subs = new ArrayList();
 			foreach ($childHolders as $holder) {
 				$subs->push($holder);
@@ -161,9 +164,10 @@ class NewsHolder extends Page {
 					}
 				}
 			}
+			return $subs;
 		}
 
-		return $subs;
+		return false;
 	}
 
 	/**
