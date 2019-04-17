@@ -186,7 +186,7 @@ class NewsArticle extends Page {
 			// redirect away
 			return $this->ExternalURL;
 		}
-		if ($this->InternalFile()->ID) {
+		if ($this->InternalFileID > 0) {
 			$file = $this->InternalFile();
 			return $file->Link($action);
 		}
