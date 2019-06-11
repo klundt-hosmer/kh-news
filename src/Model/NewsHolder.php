@@ -9,6 +9,7 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Core\Convert;
 
 
 class NewsHolder extends Page {
@@ -39,13 +40,7 @@ class NewsHolder extends Page {
 		NewsArticle::class,
 		NewsHolder::class
 	];
-	/**
-	 * Should this news article be automatically filed into a year/month/date
-	 * folder on creation.
-	 *
-	 * @var boolean
-	 */
-	private static $automatic_filing = true;
+
 	/**
 	 * A bit of a cheat way of letting the template determine how many articles to display.
 	 *
@@ -198,6 +193,10 @@ class NewsHolder extends Page {
 	 * @param Page $article
 	 */
 	public function getPartitionedHolderForArticle($article) {
+
+		if (!$this->AutoFiling){
+			return;
+		}
 		if ($this->FileBy == 'Published' && $article->OriginalPublishedDate) {
 			$date = $article->OriginalPublishedDate;
 		} else if ($this->hasField($this->FileBy)) {
