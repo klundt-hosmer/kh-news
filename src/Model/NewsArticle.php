@@ -68,6 +68,16 @@ class NewsArticle extends Page {
 
 		return $fields;
 	}
+	
+	function Author()
+	{
+		return $this->Author;
+	}
+
+	function Source()
+	{
+		return $this->Source;
+	}
 
 	/**
 	 * When the article is saved, and this article's section dictates that it
