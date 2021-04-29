@@ -22,13 +22,27 @@ a date based hierarchy, generating a hierarchy for archive purposes.
 
 Unlike the Blog module, the News Module does not support widgets at all, and
 does not come with Comments enabled by default. While these things could be
-added on by yourself, it is not core to the functionality of the module. 
+added on by yourself, it is not core to the functionality of the module.
+
+## Installation
+This module is not in packagist, so a few steps are required.
+
+Specify the `klundt-hosmer/kh-news` as a repository by adding this to `composer.json`:
+```
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/klundt-hosmer/kh-news"
+    }
+  ],
+ ```
+ 
+ then require the module with
+ `composer require micahsheets/kh-news:dev-main`
+ 
+ the `dev-main` portion is what causes it to pull from the `klundt-hosmer/kh-news` main branch instead of the micahsheets package. 
 
 ## Documentation
-
-Extract to the "news" directory in your SilverStripe folder, and run dev/build.
-You should now have a "News Holder" page type, and News Item page types to be
-created beneath the news holders. 
 
 The News module also provides functionality to automatically file 
 articles beneath a hierarchy ordered by Year, Month and day. This will then
