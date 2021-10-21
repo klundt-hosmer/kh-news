@@ -32,16 +32,14 @@ Specify the `klundt-hosmer/kh-news` as a repository by adding this to `composer.
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/klundt-hosmer/kh-news"
+      "url": "https://github.com/klundt-hosmer/kh-news.git"
     }
   ],
  ```
  
- then require the module with
- `composer require micahsheets/kh-news:dev-main`
+ then add the module with
+ `composer require klundt-hosmer/kh-news:^1.3.2`
  
- the `dev-main` portion is what causes it to pull from the `klundt-hosmer/kh-news` main branch instead of the micahsheets package. 
-
 ## Documentation
 
 The News module also provides functionality to automatically file 
