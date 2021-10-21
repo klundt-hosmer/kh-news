@@ -15,7 +15,7 @@ class NewsArticle extends Page {
 
 	private static $table_name = 'NewsArticle';
 
-	private static $icon = 'micahsheets/kh-news:client/images/newspaper-file.gif';
+	private static $icon_class = 'font-icon-p-news-item';
 
 	private static $db = [
 		'Summary' => 'HTMLText',
