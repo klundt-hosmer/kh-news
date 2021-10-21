@@ -15,6 +15,8 @@ use SilverStripe\Core\Convert;
 class NewsHolder extends Page {
 
 	private static $table_name = 'NewsHolder';
+	private static $icon_class = 'font-icon-news';
+
 
 	private static $db = [
 		'AutoFiling'			=> 'Boolean',		// whether articles created in this holder
@@ -33,8 +35,6 @@ class NewsHolder extends Page {
 		'AutoFiling'			=> false,
 		'PrimaryNewsSection'	=> true
 	];
-
-	private static $icon = 'micahsheets/kh-news:client/images/newsholder-file.gif';
 
 	private static $allowed_children = [
 		NewsArticle::class,
