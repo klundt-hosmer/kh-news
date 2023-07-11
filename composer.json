@@ -12,7 +12,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"klundtr-hosmer\\kh-news\\": "src/"
+			"micahsheets\\khnews\\": "src/"
 		}
 	},
 	"extra": {

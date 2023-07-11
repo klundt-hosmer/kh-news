@@ -68,7 +68,7 @@ class NewsArticle extends Page {
 
 		return $fields;
 	}
-	
+
 	function Author()
 	{
 		return $this->Author;
@@ -106,7 +106,7 @@ class NewsArticle extends Page {
 				$this->Created = date('Y-m-d H:i:s');
 			}
 			$pp = $this->PartitionParent();
-			if ($pp->ID != $this->ParentID) {
+			if ($pp && $pp->ID != $this->ParentID) {
 				$this->ParentID = $pp->ID;
 			}
 		}
